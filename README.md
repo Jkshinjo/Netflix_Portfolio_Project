@@ -1,1 +1,2 @@
-# Netflix_Portfolio_Project
+# Netflix Portfolio Project
+## By Jediah Kai Shinjo Mattison
