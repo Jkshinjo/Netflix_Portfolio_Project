@@ -1,0 +1,52 @@
+SELECT * FROM netflix;
+
+--count of movies and tv shows
+SELECT type, COUNT(*)
+FROM netflix
+GROUP BY type;
+
+--Count of top 15 most produced types of content
+SELECT listed_in, country, type, COUNT(DISTINCT show_id) AS total
+FROM netflix
+WHERE country IN ('United States', 'Japan', 'South Korea', 'United Kingdom', 'India')
+GROUP BY listed_in, type, country
+ORDER BY COUNT DESC
+LIMIT 15;
+
+--count of all media types per country. 
+SELECT s.country ,COUNT(*) AS total
+FROM(SELECT *
+     FROM netflix 
+     WHERE country IN ('United States', 'Japan', 'South Korea', 'United Kingdom', 'India')) AS s
+     GROUP BY s.country;
+    
+-- count of media based on rating
+SELECT rating, COUNT(*) AS total
+FROM netflix
+GROUP BY rating
+ORDER BY count DESC;
+
+-- count of movies on netflix by top hollywood directors according to IMDB
+SELECT director, COUNT(*) AS movies 
+FROM netflix
+WHERE director IN ('Steven Speilberg','Alfred Hitchcock','Martin Scorcese','Christopher Nolan', 'James Cameron', 'Francis Ford Coppola','Quentin Tarantino','Guy Ritchie','David Fincher','George Lucas')
+GROUP BY director
+ORDER BY movies DESC;
+
+-- What are those movies?
+SELECT director, title, EXTRACT(year FROM date_added) AS year_added, netflix.cast, rating, description
+FROM netflix
+WHERE director IN ('Steven Speilberg','Alfred Hitchcock','Martin Scorcese','Christopher Nolan', 'James Cameron', 'Francis Ford Coppola','Quentin Tarantino','Guy Ritchie','David Fincher','George Lucas')
+ORDER BY year_added;
+
+--Movies that star top ten hollywood stars according to imdb (surprisingly only DiCaprio is on Netflix)
+SELECT netflix.cast, title, EXTRACT(year FROM date_added) AS year_added, rating, listed_in
+FROM netflix
+WHERE netflix.cast IN ('Robert Downey Jr.', 'Leonardo DiCaprio', 'Tom Cruise', 'Johnny Depp', 'George Clooney', 'Steve Carell', 'Meryl Streep', 'Mark Whalberg', 'Brad Pitt', 'Jennifer Lawrence')
+ORDER BY year_added;
+
+--number of movies and shows added to netflix per year 
+SELECT EXTRACT(year from date_added) AS year, type, COUNT(DISTINCT show_id) AS total
+FROM netflix 
+GROUP BY year, type 
+ORDER BY year;
